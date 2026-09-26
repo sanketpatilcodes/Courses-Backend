@@ -162,8 +162,8 @@ public class TutorialContentService {
 	private Path directoryFor(String courseSlug) {
 		try (Stream<Path> sections = Files.list(contentDirectory)) {
 			return sections.filter(Files::isDirectory)
-					.map(section -> section.resolve(courseSlug))
-					.filter(Files::isDirectory)
+					.flatMap(this::courseDirectories)
+					.filter(course -> toSlug(course.getFileName().toString()).equals(courseSlug))
 					.findFirst()
 					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Content folder not found"));
 		} catch (IOException exception) {
@@ -173,23 +173,29 @@ public class TutorialContentService {
 	}
 
 	private Path directoryFor(String sectionSlug, String courseSlug) {
-		Path directory = sectionDirectoryFor(sectionSlug).resolve(courseSlug).normalize();
+		Path directory = courseDirectories(sectionDirectoryFor(sectionSlug))
+				.filter(course -> toSlug(course.getFileName().toString()).equals(courseSlug))
+				.findFirst()
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Content folder not found"));
 		if (!directory.startsWith(contentDirectory)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid content path");
-		}
-		if (!Files.isDirectory(directory)) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Content folder not found");
 		}
 		return directory;
 	}
 
 	private Path sectionDirectoryFor(String sectionSlug) {
-		Path section = contentDirectory.resolve(sectionSlug).normalize();
+		Path section;
+		try (Stream<Path> sections = Files.list(contentDirectory)) {
+			section = sections.filter(Files::isDirectory)
+					.filter(candidate -> toSlug(candidate.getFileName().toString()).equals(sectionSlug))
+					.findFirst()
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Content section not found"));
+		} catch (IOException exception) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+					"Content folders could not be read", exception);
+		}
 		if (!section.startsWith(contentDirectory)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid content path");
-		}
-		if (!Files.isDirectory(section)) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Content section not found");
 		}
 		return section;
 	}
