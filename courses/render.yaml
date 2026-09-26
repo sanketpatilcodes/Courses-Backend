@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: courses-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeploy: true
