@@ -1,0 +1,18 @@
+{
+  "title": "Android SDK Creation",
+  "description": "A practical tutorial for creating, publishing, and using an Android SDK.",
+  "tutorials": [
+    {
+      "slug": "create-android-sdk-part-one",
+      "title": "Create Android SDK - Part 1",
+      "description": "Learn the basic steps for creating an Android SDK module.",
+      "image": "/api/content/android-sdk-creation/create-android-sdk-part-one/image"
+    },
+    {
+      "slug": "publish-and-use-android-sdk-part-two",
+      "title": "Publish and Use Android SDK - Part 2",
+      "description": "Learn how to publish an Android SDK and use it from another application.",
+      "image": "/api/content/android-sdk-creation/publish-and-use-android-sdk-part-two/image"
+    }
+  ]
+}

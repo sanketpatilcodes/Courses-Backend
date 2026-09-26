@@ -1,0 +1,36 @@
+{
+  "title": "Kotlin Scope Functions",
+  "description": "A practical guide to Kotlin let, run, with, apply, and also scope functions.",
+  "tutorials": [
+    {
+      "slug": "let-block",
+      "title": "let Block",
+      "description": "Use let to transform a value and work with its result in a scoped block.",
+      "image": "/api/content/kotlin/kotlin-scope-functions/let-block/image"
+    },
+    {
+      "slug": "run-block",
+      "title": "run Block",
+      "description": "Use run to execute a block with the receiver available as this.",
+      "image": "/api/content/kotlin/kotlin-scope-functions/run-block/image"
+    },
+    {
+      "slug": "with-block",
+      "title": "with Block",
+      "description": "Use with to configure or operate on an object within a focused scope.",
+      "image": "/api/content/kotlin/kotlin-scope-functions/with-block/image"
+    },
+    {
+      "slug": "apply-block",
+      "title": "apply Block",
+      "description": "Use apply to configure an object and return that same object.",
+      "image": "/api/content/kotlin/kotlin-scope-functions/apply-block/image"
+    },
+    {
+      "slug": "also-block",
+      "title": "also Block",
+      "description": "Use also to perform side effects while returning the original object.",
+      "image": "/api/content/kotlin/kotlin-scope-functions/also-block/image"
+    }
+  ]
+}

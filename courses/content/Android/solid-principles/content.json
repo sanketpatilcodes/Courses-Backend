@@ -1,0 +1,36 @@
+{
+  "title": "SOLID Principles",
+  "description": "Five principles for writing maintainable, flexible, and understandable object-oriented software.",
+  "tutorials": [
+    {
+      "slug": "single-responsibility-principle",
+      "title": "Single Responsibility Principle",
+      "description": "A class should have one reason to change, meaning it should have one clear responsibility.",
+      "image": "/api/content/android/solid-principles/single-responsibility-principle/image"
+    },
+    {
+      "slug": "open-closed-principle",
+      "title": "Open Closed Principle",
+      "description": "Software entities should be open for extension but closed for modification.",
+      "image": "/api/content/android/solid-principles/open-closed-principle/image"
+    },
+    {
+      "slug": "liskov-substitution-principle",
+      "title": "Liskov Substitution Principle",
+      "description": "Objects of a subclass should be replaceable for objects of its superclass without breaking the application.",
+      "image": "/api/content/android/solid-principles/liskov-substitution-principle/image"
+    },
+    {
+      "slug": "interface-segregation-principle",
+      "title": "Interface Segregation Principle",
+      "description": "Clients should not be forced to depend on methods they do not use.",
+      "image": "/api/content/android/solid-principles/interface-segregation-principle/image"
+    },
+    {
+      "slug": "dependency-inversion-principle",
+      "title": "Dependency Inversion Principle",
+      "description": "High-level modules should not depend on low-level modules; both should depend on abstractions.",
+      "image": "/api/content/android/solid-principles/dependency-inversion-principle/image"
+    }
+  ]
+}
