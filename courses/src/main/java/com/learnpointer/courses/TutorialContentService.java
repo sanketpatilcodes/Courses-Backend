@@ -21,15 +21,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class TutorialContentService {
 
 	private final Path contentDirectory;
+	private final Path tutorialsRoot;
+	private final Path interviewsRoot;
 	private final ObjectMapper objectMapper;
 
 	public TutorialContentService(@Value("${content.directory:content}") String contentDirectory) {
 		this.contentDirectory = Path.of(contentDirectory).toAbsolutePath().normalize();
+		this.tutorialsRoot = this.contentDirectory.resolve("Tutorials");
+		this.interviewsRoot = this.contentDirectory.resolve("Interviews");
 		this.objectMapper = new ObjectMapper();
 	}
 
 	public List<ContentGroup> findContentGroups() {
-		try (Stream<Path> sections = Files.list(contentDirectory)) {
+		try (Stream<Path> sections = Files.list(tutorialsRoot)) {
 			return sections.filter(Files::isDirectory)
 					.flatMap(this::courseDirectories)
 					.map(this::toContentGroup)
@@ -42,7 +46,7 @@ public class TutorialContentService {
 	}
 
 	public List<ContentSection> findContentSections() {
-		try (Stream<Path> sections = Files.list(contentDirectory)) {
+		try (Stream<Path> sections = Files.list(tutorialsRoot)) {
 			return sections.filter(Files::isDirectory)
 					.filter(this::hasTutorialCourse)
 					.map(this::toContentSection)
@@ -73,7 +77,7 @@ public class TutorialContentService {
 	}
 
 	public InterviewDocument findInterview(String platformSlug) {
-		Path platformDirectory = directoryFor("interviews", platformSlug);
+		Path platformDirectory = interviewPlatformDirectoryFor(platformSlug);
 		Path interviewFile;
 		try (Stream<Path> files = Files.list(platformDirectory)) {
 			interviewFile = files.filter(Files::isRegularFile)
@@ -183,7 +187,7 @@ public class TutorialContentService {
 	}
 
 	private Path directoryFor(String courseSlug) {
-		try (Stream<Path> sections = Files.list(contentDirectory)) {
+		try (Stream<Path> sections = Files.list(tutorialsRoot)) {
 			return sections.filter(Files::isDirectory)
 					.flatMap(this::courseDirectories)
 					.filter(course -> toSlug(course.getFileName().toString()).equals(courseSlug))
@@ -200,15 +204,32 @@ public class TutorialContentService {
 				.filter(course -> toSlug(course.getFileName().toString()).equals(courseSlug))
 				.findFirst()
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Content folder not found"));
-		if (!directory.startsWith(contentDirectory)) {
+		if (!directory.startsWith(tutorialsRoot)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid content path");
 		}
 		return directory;
 	}
 
+	private Path interviewPlatformDirectoryFor(String platformSlug) {
+		Path platform;
+		try (Stream<Path> platforms = Files.list(interviewsRoot)) {
+			platform = platforms.filter(Files::isDirectory)
+					.filter(candidate -> toSlug(candidate.getFileName().toString()).equals(platformSlug))
+					.findFirst()
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Interview platform not found"));
+		} catch (IOException exception) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+					"Interview folders could not be read", exception);
+		}
+		if (!platform.startsWith(interviewsRoot)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid content path");
+		}
+		return platform;
+	}
+
 	private Path sectionDirectoryFor(String sectionSlug) {
 		Path section;
-		try (Stream<Path> sections = Files.list(contentDirectory)) {
+		try (Stream<Path> sections = Files.list(tutorialsRoot)) {
 			section = sections.filter(Files::isDirectory)
 					.filter(candidate -> toSlug(candidate.getFileName().toString()).equals(sectionSlug))
 					.findFirst()
@@ -217,7 +238,7 @@ public class TutorialContentService {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
 					"Content folders could not be read", exception);
 		}
-		if (!section.startsWith(contentDirectory)) {
+		if (!section.startsWith(tutorialsRoot)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid content path");
 		}
 		return section;
