@@ -44,6 +44,7 @@ public class TutorialContentService {
 	public List<ContentSection> findContentSections() {
 		try (Stream<Path> sections = Files.list(contentDirectory)) {
 			return sections.filter(Files::isDirectory)
+					.filter(this::hasTutorialCourse)
 					.map(this::toContentSection)
 					.sorted(Comparator.comparing(ContentSection::title))
 					.toList();
@@ -57,6 +58,7 @@ public class TutorialContentService {
 		Path section = sectionDirectoryFor(sectionSlug);
 		try (Stream<Path> courses = Files.list(section)) {
 			return courses.filter(Files::isDirectory)
+					.filter(this::hasTutorialContent)
 					.map(this::toContentCourse)
 					.sorted(Comparator.comparing(ContentCourse::title))
 					.toList();
@@ -68,6 +70,27 @@ public class TutorialContentService {
 
 	public ContentGroup findContentGroup(String sectionSlug, String courseSlug) {
 		return toContentGroup(directoryFor(sectionSlug, courseSlug));
+	}
+
+	public InterviewDocument findInterview(String platformSlug) {
+		Path platformDirectory = directoryFor("interviews", platformSlug);
+		Path interviewFile;
+		try (Stream<Path> files = Files.list(platformDirectory)) {
+			interviewFile = files.filter(Files::isRegularFile)
+					.filter(path -> path.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".json"))
+					.findFirst()
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+							"Interview content file not found"));
+		} catch (IOException exception) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+					"Interview content could not be read", exception);
+		}
+		try {
+			return objectMapper.readValue(interviewFile.toFile(), InterviewDocument.class);
+		} catch (IOException exception) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+					"Interview content could not be parsed", exception);
+		}
 	}
 
 	public List<Tutorial> findAll() {
@@ -208,6 +231,14 @@ public class TutorialContentService {
 	private ContentCourse toContentCourse(Path directory) {
 		ContentDocument document = readContentDocument(directory);
 		return new ContentCourse(toSlug(directory.getFileName().toString()), document.title(), document.description());
+	}
+
+	private boolean hasTutorialContent(Path directory) {
+		return Files.isRegularFile(directory.resolve("content.json"));
+	}
+
+	private boolean hasTutorialCourse(Path section) {
+		return courseDirectories(section).anyMatch(this::hasTutorialContent);
 	}
 
 	private ContentGroup toContentGroup(Path directory) {

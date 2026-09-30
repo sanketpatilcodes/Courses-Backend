@@ -1,0 +1,90 @@
+{
+  "appName": "Android Interview Questions",
+  "categories": [
+    {
+      "id": 1,
+      "name": "Android Basics",
+      "questions": [
+        {
+          "id": 101,
+          "question": "What is Android?",
+          "answer": "Android is an open-source mobile operating system based on the Linux kernel and primarily designed for touchscreen mobile devices."
+        },
+        {
+          "id": 102,
+          "question": "What are the main components of an Android application?",
+          "answer": "The four main components are Activity, Service, Broadcast Receiver, and Content Provider."
+        },
+        {
+          "id": 103,
+          "question": "What is an Activity in Android?",
+          "answer": "An Activity represents a single screen with a user interface and is used to interact with the user."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Kotlin",
+      "questions": [
+        {
+          "id": 201,
+          "question": "What is the difference between val and var in Kotlin?",
+          "answer": "val declares a read-only reference, while var declares a mutable variable whose value can be reassigned."
+        },
+        {
+          "id": 202,
+          "question": "What is a nullable type in Kotlin?",
+          "answer": "A nullable type allows a variable to contain null. It is declared using the question-mark syntax, such as String?."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Jetpack Compose",
+      "questions": [
+        {
+          "id": 301,
+          "question": "What is Jetpack Compose?",
+          "answer": "Jetpack Compose is Android's modern declarative UI toolkit for building native user interfaces with Kotlin."
+        },
+        {
+          "id": 302,
+          "question": "What is recomposition in Jetpack Compose?",
+          "answer": "Recomposition is the process of rerunning composable functions when the state they depend on changes."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Architecture",
+      "questions": [
+        {
+          "id": 401,
+          "question": "What is MVVM in Android?",
+          "answer": "MVVM stands for Model-View-ViewModel. It separates UI logic from application data and business logic, making applications easier to maintain and test."
+        },
+        {
+          "id": 402,
+          "question": "What is a ViewModel?",
+          "answer": "A ViewModel stores and manages UI-related data in a lifecycle-conscious way so that data can survive configuration changes such as screen rotation."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Advanced Android",
+      "questions": [
+        {
+          "id": 501,
+          "question": "What is Kotlin Coroutines?",
+          "answer": "Kotlin Coroutines provide a way to perform asynchronous and non-blocking operations using structured concurrency."
+        },
+        {
+          "id": 502,
+          "question": "What is the difference between StateFlow and LiveData?",
+          "answer": "Both can expose observable state. StateFlow is a Kotlin Flow API and integrates naturally with coroutines, while LiveData is an Android lifecycle-aware observable data holder."
+        }
+      ]
+    }
+  ]
+}
